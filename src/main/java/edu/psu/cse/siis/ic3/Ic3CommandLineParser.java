@@ -34,9 +34,8 @@ public class Ic3CommandLineParser extends CommandLineParser<Ic3CommandLineArgume
 
   @Override
   protected void parseAnalysisSpecificArguments(Options options) {
-    options.addOption(Option.builder("apkormanifest")
-        .desc("Path to the manifest file or the .apk of the application.").hasArg()
-        .argName(".apk or manifest").required().build());
+    options.addOption(Option.builder("apk").desc("Path to the .apk of the application.").hasArg()
+        .argName(".apk").required().build());
     options.addOption(Option.builder("db").desc("Store entry points to database.").hasArg()
         .optionalArg(true).argName("DB properties file").build());
     options.addOption(Option.builder("ssh").desc("Use SSH to connect to the database.").hasArg()

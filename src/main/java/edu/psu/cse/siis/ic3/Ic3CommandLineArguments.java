@@ -32,7 +32,7 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
   private static final String DEFAULT_COMPILED_MODEL_PATH = "/res/icc.cmodel";
   private static final String DEFAULT_DB_NAME = "cc";
 
-  private String manifest;
+  private String apk;
   private String db;
   private String ssh;
   private String iccStudy;
@@ -48,17 +48,17 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
   }
 
   /**
-   * Gets the path to the manifest or .apk file.
-   * 
-   * @return The path to the manifest or .apk file.
+   * Gets the path to the .apk file.
+   *
+   * @return The path to the .apk file.
    */
-  public String getManifest() {
-    return manifest;
+  public String getApk() {
+    return apk;
   }
 
   /**
    * Gets the path to the database properties file.
-   * 
+   *
    * @return The path to the database properties file if IC3 should output its results to a
    *         database, null otherwise.
    */
@@ -68,7 +68,7 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
 
   /**
    * Gets the path to the SSH properties file.
-   * 
+   *
    * @return The path to the SSH properties file if an SSH connection is requested, null otherwise.
    */
   public String getSsh() {
@@ -81,7 +81,7 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
 
   /**
    * Gets the local port to which the database connection should be done.
-   * 
+   *
    * @return The local port to connect to.
    */
   public int getDbLocalPort() {
@@ -91,7 +91,7 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
   /**
    * Determines if mappings between ICC-sending locations and the components that contain them
    * should be computed.
-   * 
+   *
    * @return True if the components that contain ICC-sending locations should be determined.
    */
   public boolean computeComponents() {
@@ -100,7 +100,7 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
 
   /**
    * Returns the destination protocol buffer file path.
-   * 
+   *
    * @return The destination path if any, otherwise null.
    */
   public String getProtobufDestination() {
@@ -109,7 +109,7 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
 
   /**
    * Determines if the output should be binary, in the case of a protobuf output.
-   * 
+   *
    * @return True if the output should be binary.
    */
   public boolean binary() {
@@ -118,7 +118,7 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
 
   /**
    * Returns the name of the sample.
-   * 
+   *
    * @return The sample name, if any, otherwise null.
    */
   public String getSample() {
@@ -130,7 +130,7 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
    * using the arguments contained in this class.
    */
   public void processCommandLineArguments() {
-    manifest = getOptionValue("apkormanifest");
+    apk = getOptionValue("apk");
 
     if (getCompiledModel() == null && getModel() == null) {
       setCompiledModel(DEFAULT_COMPILED_MODEL_PATH);

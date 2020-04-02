@@ -131,7 +131,7 @@ public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
     }
 
     Timers.v().mainGeneration.start();
-    setupApplication = new SetupApplication(commandLineArguments.getManifest(),
+    setupApplication = new SetupApplication(commandLineArguments.getApk(),
         commandLineArguments.getInput(), commandLineArguments.getClasspath());
 
     Map<String, Set<String>> callBackMethods;
@@ -140,12 +140,12 @@ public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
     if (detailedManifest == null) {
       ProcessManifest manifest;
       try {
-        manifest = new ProcessManifest(commandLineArguments.getManifest());
+        manifest = new ProcessManifest(commandLineArguments.getApk());
         entryPointClasses = manifest.getEntryPointClasses();
         packageName = manifest.getPackageName();
       } catch (IOException | XmlPullParserException e) {
         throw new FatalAnalysisException(
-            "Could not process manifest file " + commandLineArguments.getManifest() + ": " + e);
+            "Could not process apk file " + commandLineArguments.getApk() + ": " + e);
       }
     } else {
       entryPointClasses = detailedManifest.getEntryPointClasses();
@@ -235,7 +235,7 @@ public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
 
   protected void prepareManifestFile(Ic3CommandLineArguments commandLineArguments) {
     detailedManifest = new ManifestPullParser();
-    detailedManifest.loadManifestFile(commandLineArguments.getManifest());
+    detailedManifest.loadManifestFile(commandLineArguments.getApk());
   }
 
   @Override
