@@ -32,7 +32,6 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
   private static final String DEFAULT_COMPILED_MODEL_PATH = "/res/icc.cmodel";
   private static final String DEFAULT_DB_NAME = "cc";
 
-  private String apk;
   private String db;
   private String ssh;
   private String iccStudy;
@@ -45,15 +44,6 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
 
   public String getDbName() {
     return dbName != null ? dbName : DEFAULT_DB_NAME;
-  }
-
-  /**
-   * Gets the path to the .apk file.
-   *
-   * @return The path to the .apk file.
-   */
-  public String getApk() {
-    return apk;
   }
 
   /**
@@ -130,7 +120,6 @@ public class Ic3CommandLineArguments extends CommandLineArguments {
    * using the arguments contained in this class.
    */
   public void processCommandLineArguments() {
-    apk = getOptionValue("apk");
 
     if (getCompiledModel() == null && getModel() == null) {
       setCompiledModel(DEFAULT_COMPILED_MODEL_PATH);

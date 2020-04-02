@@ -34,8 +34,10 @@ public class Ic3CommandLineParser extends CommandLineParser<Ic3CommandLineArgume
 
   @Override
   protected void parseAnalysisSpecificArguments(Options options) {
-    options.addOption(Option.builder("apk").desc("Path to the .apk of the application.").hasArg()
-        .argName(".apk").required().build());
+    options.addOption(Option.builder("in").desc("Not used in IC3").hasArg().argName("input")
+        .longOpt("input").build());
+    options.addOption(Option.builder("a").desc("The APK for the analysis.").hasArg()
+        .argName("apk file").required().longOpt("apk").build());
     options.addOption(Option.builder("db").desc("Store entry points to database.").hasArg()
         .optionalArg(true).argName("DB properties file").build());
     options.addOption(Option.builder("ssh").desc("Use SSH to connect to the database.").hasArg()
@@ -55,13 +57,14 @@ public class Ic3CommandLineParser extends CommandLineParser<Ic3CommandLineArgume
 
   @Override
   protected void printHelp(Options options) {
-    HelpFormatter formatter = new HelpFormatter();
     System.out.println(COPYRIGHT);
-    formatter.printHelp("ic3 -input <Android directory> -classpath <classpath> "
-        + "-apk <path to application .apk> [-computecomponents] "
-        + "[-db <path to DB properties file>] [-ssh <path to SSH properties file>] "
-        + "[-localport <DB local port>] [-modeledtypesonly] [-output <output directory>] "
-        + "[-protobuf <destination path>] [-binary] [-sample <sample name>] "
-        + "[-threadcount <thread count>]", options);
+    HelpFormatter helpFormatter = new HelpFormatter();
+    helpFormatter.printHelp("usage: ic3 -a <apk file> -cp <classpath> [-binary]\n"
+        + "    [-cmodel <compiled model> | -model <model directory>]\n"
+        + "    [-computecomponents] [-db <DB properties file>] [-dbname <DB name>]\n"
+        + "    [-localport <local DB port>]  [-modeledtypesonly] [-out <output>]\n"
+        + "    [-protobuf <destination path>] [-sample <sample name>]\n"
+        + "    [-ssh <SSH properties file>] [-threadcount <thread count>]\n"
+        + "    [-traversemodeled]", options);
   }
 }

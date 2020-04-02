@@ -1,6 +1,5 @@
 package edu.psu.cse.siis.ic3;
 
-
 public class Main {
   public static void main(String[] args) {
     Ic3Analysis analysis = new Ic3Analysis();

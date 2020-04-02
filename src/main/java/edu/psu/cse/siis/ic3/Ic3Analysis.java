@@ -26,7 +26,7 @@ import java.io.Writer;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,7 +53,6 @@ import edu.psu.cse.siis.ic3.db.SQLConnection;
 import edu.psu.cse.siis.ic3.manifest.ManifestPullParser;
 import soot.PackManager;
 import soot.Scene;
-import soot.SootClass;
 import soot.SootMethod;
 import soot.Transform;
 import soot.Value;
@@ -63,16 +62,6 @@ import soot.jimple.infoflow.android.manifest.ProcessManifest;
 import soot.options.Options;
 
 public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
-  private static final String INTENT = "android.content.Intent";
-  private static final String INTENT_FILTER = "android.content.IntentFilter";
-  private static final String BUNDLE = "android.os.Bundle";
-  private static final String COMPONENT_NAME = "android.content.ComponentName";
-  private static final String ACTIVITY = "android.app.Activity";
-
-  private static final String[] frameworkClassesArray =
-      { INTENT, INTENT_FILTER, BUNDLE, COMPONENT_NAME, ACTIVITY };
-  protected static final List<String> frameworkClasses = Arrays.asList(frameworkClassesArray);
-
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
   private Ic3Data.Application.Builder ic3Builder;
@@ -131,8 +120,8 @@ public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
     }
 
     Timers.v().mainGeneration.start();
-    setupApplication = new SetupApplication(commandLineArguments.getApk(),
-        commandLineArguments.getInput(), commandLineArguments.getClasspath());
+    setupApplication =
+        new SetupApplication(commandLineArguments.getApk(), commandLineArguments.getClasspath());
 
     Map<String, Set<String>> callBackMethods;
 
@@ -194,10 +183,12 @@ public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
     Options.v().set_allow_phantom_refs(true);
     Options.v().set_output_format(Options.output_format_none);
     Options.v().set_whole_program(true);
-    Options.v().set_soot_classpath(
-        commandLineArguments.getInput() + File.pathSeparator + commandLineArguments.getClasspath());
+    Options.v().set_src_prec(Options.src_prec_apk);
+    Options.v().set_android_jars(commandLineArguments.getClasspath());
+    List<String> apps = new ArrayList<String>();
+    apps.add(commandLineArguments.getApk());
+    Options.v().set_process_dir(apps);
     Options.v().set_ignore_resolution_errors(true);
-    Options.v().set_process_dir(frameworkClasses);
 
     Options.v().setPhaseOption("cg.spark", "on");
 
@@ -214,15 +205,9 @@ public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
       Options.v().set_whole_shimple(true);
     }
 
-    Options.v().set_src_prec(Options.src_prec_java);
     Timers.v().misc.end();
 
     Timers.v().classLoading.start();
-    for (String frameworkClass : frameworkClasses) {
-      SootClass c = Scene.v().loadClassAndSupport(frameworkClass);
-      Scene.v().forceResolve(frameworkClass, SootClass.BODIES);
-      c.setApplicationClass();
-    }
 
     Scene.v().loadNecessaryClasses();
     Timers.v().classLoading.end();
@@ -242,8 +227,7 @@ public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
   protected void setApplicationClasses(Ic3CommandLineArguments commandLineArguments)
       throws FatalAnalysisException {
     AnalysisParameters.v()
-        .addAnalysisClasses(computeAnalysisClasses(commandLineArguments.getInput()));
-    AnalysisParameters.v().addAnalysisClasses(frameworkClasses);
+        .addAnalysisClasses(computeAnalysisClasses(commandLineArguments.getApk()));
   }
 
   @Override
@@ -259,7 +243,7 @@ public class Ic3Analysis extends Analysis<Ic3CommandLineArguments> {
           writer = new BufferedWriter(new FileWriter(outputFile, false));
         }
 
-        writer.write(commandLineArguments.getInput() + " -1\n");
+        writer.write(commandLineArguments.getApk() + " -1\n");
         writer.close();
       } catch (IOException e1) {
         logger.error("Could not write to file after failure to process application", e1);

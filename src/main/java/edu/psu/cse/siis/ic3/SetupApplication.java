@@ -10,7 +10,6 @@
  ******************************************************************************/
 package edu.psu.cse.siis.ic3;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,14 +51,12 @@ public class SetupApplication {
   private String appPackageName = "";
 
   private final String apkFileLocation;
-  private final String classDirectory;
   private final String androidClassPath;
 
   private AndroidEntryPointCreator entryPointCreator;
 
-  public SetupApplication(String apkFileLocation, String classDirectory, String androidClassPath) {
+  public SetupApplication(String apkFileLocation, String androidClassPath) {
     this.apkFileLocation = apkFileLocation;
-    this.classDirectory = classDirectory;
     this.androidClassPath = androidClassPath;
   }
 
@@ -67,7 +64,7 @@ public class SetupApplication {
    * Gets the entry point creator used for generating the dummy main method emulating the Android
    * lifecycle and the callbacks. Make sure to call calculateSourcesSinksEntryPoints() first, or you
    * will get a null result.
-   * 
+   *
    * @return The entry point creator
    */
   public AndroidEntryPointCreator getEntryPointCreator() {
@@ -94,14 +91,14 @@ public class SetupApplication {
   /**
    * Calculates the sets of sources, modifiers, entry points, and callbacks methods for the given
    * APK file.
-   * 
+   *
    * @param sourceMethods The set of methods to be considered as sources
    * @param modifierMethods The set of methods to be considered as modifiers
    * @throws IOException Thrown if the given source/modifier file could not be read.
    */
-  public Map<String, Set<String>> calculateSourcesSinksEntrypoints(
-      Set<AndroidMethod> sourceMethods, Set<AndroidMethod> modifierMethods, String packageName,
-      Set<String> entryPointClasses) throws IOException {
+  public Map<String, Set<String>> calculateSourcesSinksEntrypoints(Set<AndroidMethod> sourceMethods,
+      Set<AndroidMethod> modifierMethods, String packageName, Set<String> entryPointClasses)
+      throws IOException {
     // To look for callbacks, we need to start somewhere. We use the Android
     // lifecycle methods for this purpose.
     this.appPackageName = packageName;
@@ -235,7 +232,7 @@ public class SetupApplication {
   /**
    * Registers the callback methods in the given layout control so that they are included in the
    * dummy main method
-   * 
+   *
    * @param callbackClass The class with which to associate the layout callbacks
    * @param lc The layout control whose callbacks are to be associated with the given class
    */
@@ -293,7 +290,7 @@ public class SetupApplication {
 
   /**
    * Adds a method to the set of callback method
-   * 
+   *
    * @param layoutClass The layout class for which to register the callback
    * @param callbackMethod The callback method to register
    */
@@ -323,7 +320,7 @@ public class SetupApplication {
 
   /**
    * Initializes soot for running the soot-based phases of the application metadata analysis
-   * 
+   *
    * @return The entry point used for running soot
    */
   public void initializeSoot() {
@@ -332,31 +329,18 @@ public class SetupApplication {
     Options.v().set_output_format(Options.output_format_none);
     Options.v().set_whole_program(true);
     Options.v().setPhaseOption("cg.spark", "on");
-    // Options.v().setPhaseOption("cg.spark", "geom-pta:true");
-    // Options.v().setPhaseOption("cg.spark", "geom-encoding:PtIns");
     Options.v().set_ignore_resolution_errors(true);
-    // Options.v().setPhaseOption("jb", "use-original-names:true");
-    Options.v()
-        .set_soot_classpath(this.classDirectory + File.pathSeparator + this.androidClassPath);
+    Options.v().set_src_prec(Options.src_prec_apk);
+    Options.v().set_android_jars(androidClassPath);
+    List<String> apps = new ArrayList<String>();
+    apps.add(this.apkFileLocation);
+    Options.v().set_process_dir(apps);
     if (logger.isDebugEnabled()) {
       logger.debug("Android class path: " + this.androidClassPath);
     }
-    // Options.v().set_android_jars(androidJar);
-    // Options.v().set_src_prec(Options.src_prec_apk);
-    Options.v().set_process_dir(new ArrayList<>(this.entrypoints));
-    // Options.v().set_app(true);
     Main.v().autoSetOptions();
 
     Scene.v().loadNecessaryClasses();
-
-    // for (String className : this.entrypoints) {
-    // SootClass c = Scene.v().forceResolve(className, SootClass.BODIES);
-    // c.setApplicationClass();
-    // }
-    //
-    // SootMethod entryPoint = getEntryPointCreator().createDummyMain();
-    // Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
-    // return entryPoint;
   }
 
   public AndroidEntryPointCreator createEntryPointCreator() {
