@@ -19,7 +19,7 @@ mvn clean package -P standalone
 ### Using the tool
 
 <pre>
-java -jar ic3/target/ic3-0.2.0-full.jar <i>options</i>
+java -jar ic3/target/ic3-0.2.1-full.jar <i>options</i>
 </pre>
 
 ## Built With
