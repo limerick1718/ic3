@@ -1,5 +1,7 @@
 # IC3: Inter-Component Communication Analysis with COAL
 
+This version of IC3 does not require retargetting the APK with Dare anymore.
+
 ## Getting started
 
 ### Downloading the tool
