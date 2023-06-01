@@ -361,9 +361,9 @@
       <version>2.5.0</version>
     </dependency>
     <dependency>
-      <groupId>edu.psu.cse.siis</groupId>
+      <groupId>com.jordansamhi</groupId>
       <artifactId>coal</artifactId>
-      <version>0.1.7</version>
+      <version>0.2.1</version>
     </dependency>
   </dependencies>
 </project>
