@@ -4,11 +4,7 @@ This version of IC3 does not require retargetting the APK with Dare anymore.
 
 ## Getting started
 
-### Downloading the tool
-
-<pre>
-git clone https://github.com/JordanSamhi/ic3.git
-</pre>
+Using jdk1.8
 
 ### Installing the tool
 
@@ -18,10 +14,12 @@ mvn clean install:install-file -Dfile=libs/coal-all-0.1.7.jar -DgroupId=edu.psu.
 mvn clean package -P standalone
 </pre>
 
+I also attached the compiled jar file in the `target` folder.
+
 ### Using the tool
 
 <pre>
-java -jar ic3/target/ic3-0.2.1-full.jar <i>options</i>
+path_to_/ATGEmpiricalCMD.sh path_to_apk path_to_/android-platforms result_dir
 </pre>
 
 ## Built With
